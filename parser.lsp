@@ -175,9 +175,11 @@
 ; lexeme - returns the lexeme from (token lexeme)(reader)
 ;;=====================================================================
 
-(defun token  (state) ;; *** TO BE DONE ***
+(defun token  (state) ;; *** DONE ***
+   (first(pstate-lookahead state))
 )
-(defun lexeme (state) ;; *** TO BE DONE *** 
+(defun lexeme (state) ;; *** DONE *** 
+   (second(pstate-lookahead state))
 )
 
 ;;=====================================================================
@@ -300,7 +302,7 @@
 
 (defun id-list(state)
    (match state 'ID)
-   (if(eq(first pstate-lookahead state) 'COMMA)
+   (if(eq(token state) 'COMMA)
       (id-list-aux state)
    )
 )
@@ -314,7 +316,7 @@
 
 (defun var-dec-list(state)
    (match state 'VAR)
-   (if(eq(first pstate-lookahead state) 'ID)
+   (if(eq(token state) 'ID)
       (var-dec-list state)
    )
 )
