@@ -93,7 +93,7 @@
    (list (cond
          ((string=   lexeme "program")  'PROGRAM   )
          ((string=   lexeme "var"    )  'VAR       )
-         
+
          ((string=   lexeme "("      )  'OP        )
          ((string=   lexeme "input"  )  'INPUT     )
          ((string=   lexeme ","      )  'COMMA     )
@@ -288,6 +288,37 @@
 ;;=====================================================================
 
 ;; *** TO BE DONE ***
+
+(defun var-type(state) 
+   ;;TODO
+)
+
+(defun id-list-aux(state)
+   (match state 'COMMA)
+   (id-list state)
+)
+
+(defun id-list(state)
+   (match state 'ID)
+   (if(eq(first pstate-lookahead state) 'COMMA)
+      (id-list-aux state)
+   )
+)
+
+(defun var-dec(state)
+   (id-list state)
+   (match state 'COLON)
+   (var-type state)
+   (match state 'SC)
+)
+
+(defun var-dec-list(state)
+   (match state 'VAR)
+   (if(eq(first pstate-lookahead state) 'ID)
+      (var-dec-list state)
+   )
+)
+
 (defun var-part(state)
    (match state 'VAR)
    (var-dec-list state)
