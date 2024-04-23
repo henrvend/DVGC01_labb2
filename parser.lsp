@@ -91,15 +91,28 @@
 (defun map-lexeme (lexeme)
 (format t "Symbol: ~S ~%" lexeme)
    (list (cond
-         ((string=   lexeme "program")  'PROGRAM )
-         ((string=   lexeme "var"    )  'VAR     )
+         ((string=   lexeme "program")  'PROGRAM   )
+         ((string=   lexeme "var"    )  'VAR       )
+         
+         ((string=   lexeme "("      )  'OP        )
+         ((string=   lexeme "input"  )  'INPUT     )
+         ((string=   lexeme ","      )  'COMMA     )
+         ((string=   lexeme "output" )  'OUTPUT    )
+         ((string=   lexeme ")"      )  'CP        )
+         ((string=   lexeme ";"      )  'SC        )
+         ((string=   lexeme ":"      )  'COLON     )
+         ((string=   lexeme "begin"  )  'BEGIN     )
+         ((string=   lexeme "end"    )  'END       )
+         ((string=   lexeme "integer")  'INTEGER   )
+         ((string=   lexeme "boolean")  'BOOLEAN   )
+         ((string=   lexeme "real"   )  'REAL      )
+         ((string=   lexeme ":="     )  'ASSIGN    )
 
-;; etc,  *** TO BE DONE ***
 
-         ((string=   lexeme ""       )	'EOF     )
-         ((is-id     lexeme          )  'ID      )
-         ((is-number lexeme          )  'NUM     )
-         (t                             'UNKNOWN )
+         ((string=   lexeme ""       )	 'EOF       )
+         ((is-id     lexeme          )  'ID        )
+         ((is-number lexeme          )  'NUM       )
+         (t                             'UNKNOWN   )
          )
     lexeme)
 )
@@ -275,12 +288,27 @@
 ;;=====================================================================
 
 ;; *** TO BE DONE ***
-
+(defun var-part(state)
+   (match state 'VAR)
+   (var-dec-list state)
+)
 ;;=====================================================================
 ; <program-header>
 ;;=====================================================================
 
-;; *** TO BE DONE ***
+;; *** DONE? ***
+
+(defun program-header(state)
+   (match state 'program   )
+   (match state 'ID        )
+   (match state 'OP        )
+   (match state 'INPUT     )
+   (match state 'COMMA     )
+   (match state 'OUTPUT    )
+   (match state 'CP        )
+   (match state 'SC        )
+)
+
 
 ;;=====================================================================
 ; <program> --> <program-header><var-part><stat-part>
