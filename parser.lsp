@@ -107,7 +107,9 @@
          ((string=   lexeme "boolean")  'BOOLEAN   )
          ((string=   lexeme "real"   )  'REAL      )
          ((string=   lexeme ":="     )  'ASSIGN    )
-
+         ((string=   lexeme "."      )  'DOT       )
+         ((string=   lexeme "+"      )  'ADD       )
+         ((string=   lexeme "*"      )  'MULT      )
 
          ((string=   lexeme ""       )	 'EOF       )
          ((is-id     lexeme          )  'ID        )
@@ -122,11 +124,14 @@
 ;;=====================================================================
 
 (defun is-id (str)
-;; *** TO BE DONE ***
+;; *** DONE? ***
+   (and(alpha-char-p(char str 0))(every #'alphanumericp str))
 )
 
 (defun is-number (str)
-;; *** TO BE DONE ***
+;; *** DONE? ***
+   (every #'digit-char-p str)
+   
 )
 
 ;;=====================================================================
@@ -281,6 +286,75 @@
 
 ;; *** TO BE DONE ***
 
+(defun operand(state)
+   (cond 
+      ((eq(token state) 'ID)  
+         (match state 'ID))   
+      ((eq(token state) 'NUM)
+         (match state 'NUM))
+   )
+)
+
+(defun factor(state)
+   (if(eq(token state) 'OP)
+      (progn
+         (match state 'OP)
+         (expr state)
+         (match state 'CP)
+      )
+      (operand state)
+   )
+)
+
+(defun term(state)
+   (factor state)
+   (if(eq(token state) 'MULT)
+      (progn   
+         (match state 'MULT)
+         (term state)
+      )
+   )
+)
+
+(defun expr(state)
+   (term state)
+   (if(eq(token state) 'ADD) 
+      (progn
+         (match state 'ADD)
+         (expr state)
+      )
+   )
+)
+
+(defun assign-stat(state)
+   (match state 'ID)
+   (match state 'ASSIGN)
+   (expr state)
+)
+
+(defun stat(state)
+   (assign-stat state)
+)
+
+(defun stat-list-aux(state)
+   (match state 'SC)
+   (stat-list state)
+)
+
+(defun stat-list(state)
+   (stat state)
+   (if(eq(token state) 'SC)
+      (stat-list-aux state)
+   )
+)
+
+(defun stat-part(state)
+   (match state 'BEGIN)
+   (stat-list state)
+   (match state 'END)
+   (match state 'DOT)
+)
+
 ;;=====================================================================
 ; <var-part>     --> var <var-dec-list>
 ; <var-dec-list> --> <var-dec> | <var-dec><var-dec-list>
@@ -289,7 +363,7 @@
 ; <type>         --> integer | real | boolean
 ;;=====================================================================
 
-;; *** TO BE DONE ***
+;; *** DONE? ***
 
 (defun var-type(state) 
    (cond
@@ -322,7 +396,7 @@
 )
 
 (defun var-dec-list(state)
-   (match state 'VAR)
+   (var-dec state)
    (if(eq(token state) 'ID)
       (var-dec-list state)
    )
@@ -363,8 +437,15 @@
 ; THE PARSER - parse a file
 ;;=====================================================================
 
+(defun check-end-aux (state)
+   (get-token state)
+   (check-end state)
+)
+
 (defun check-end (state)
-;; *** TO BE DONE ***
+;; *** DONE? ***
+   (if(not(eq(token state) 'EOF))
+      (check-end-aux state))
 )
 
 ;;=====================================================================
