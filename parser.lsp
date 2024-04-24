@@ -332,7 +332,7 @@
 ;; *** DONE? ***
 
 (defun program-header(state)
-   (match state 'program   )
+   (match state 'PROGRAM   )
    (match state 'ID        )
    (match state 'OP        )
    (match state 'INPUT     )
@@ -403,7 +403,7 @@
 ; THE PARSER - test a single file
 ;;=====================================================================
 
-;;(parse "testfiles/testok1.pas")
+(parse "testfiles/testok1.pas")
 
 ;;=====================================================================
 ; THE PARSER - end of code
