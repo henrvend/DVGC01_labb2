@@ -292,7 +292,14 @@
 ;; *** TO BE DONE ***
 
 (defun var-type(state) 
-   ;;TODO
+   (cond
+      ((eq(token state)    'INTEGER)
+         (match state      'INTEGER))
+      ((eq(token state)    'BOOLEAN)
+         (match state      'BOOLEAN))
+      ((eq(token state)    'REAL)
+         (match state      'REAL))   
+   )
 )
 
 (defun id-list-aux(state)
@@ -332,7 +339,7 @@
 ;; *** DONE? ***
 
 (defun program-header(state)
-   (match state 'program   )
+   (match state 'PROGRAM   )
    (match state 'ID        )
    (match state 'OP        )
    (match state 'INPUT     )
