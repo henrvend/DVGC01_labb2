@@ -131,7 +131,6 @@
 (defun is-number (str)
 ;; *** DONE? ***
    (every #'digit-char-p str)
-   
 )
 
 ;;=====================================================================
@@ -180,10 +179,10 @@
 ; lexeme - returns the lexeme from (token lexeme)(reader)
 ;;=====================================================================
 
-(defun token  (state) ;; *** DONE ***
+(defun token  (state) ;; *** DONE? ***
    (first(pstate-lookahead state))
 )
-(defun lexeme (state) ;; *** DONE *** 
+(defun lexeme (state) ;; *** DONE? *** 
    (second(pstate-lookahead state))
 )
 
@@ -192,11 +191,16 @@
 ;;=====================================================================
 
 (defun symtab-add (state id)
-;; *** TO BE DONE ***
+;; *** DONE? ***
+   (if(null(pstate-symtab state)) 
+		(setf(pstate-symtab state)(list id))
+		(setf(pstate-symtab state)(append(pstate-symtab state)(cons id nil)))
+	)
 )
 
 (defun symtab-member (state id)
-;; *** TO BE DONE ***
+;; *** DONE? ***
+	(member id(pstate-symtab state):test #'string-equal)
 )
 
 (defun symtab-display (state)
@@ -284,7 +288,7 @@
 ; <operand>       --> id | number
 ;;=====================================================================
 
-;; *** TO BE DONE ***
+;; *** DONE? ***
 
 (defun operand(state)
    (cond 
@@ -382,6 +386,7 @@
 )
 
 (defun id-list(state)
+   (symtab-add state (lexeme state))
    (match state 'ID)
    (if(eq(token state) 'COMMA)
       (id-list-aux state)
