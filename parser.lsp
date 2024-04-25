@@ -292,10 +292,18 @@
 
 (defun operand(state)
    (cond 
-      ((eq(token state) 'ID)  
-         (match state 'ID))   
+      ((and(eq(token state) 'ID) (symtab-member state (lexeme state)))  
+         (match state 'ID))
+      ((eq(token state) 'ID)
+         (progn
+            (semerr2 state)
+            (match state 'ID)
+         )
+      )   
       ((eq(token state) 'NUM)
-         (match state 'NUM))
+         (match state 'NUM)
+      )
+      (t(synerr3 state))
    )
 )
 
@@ -331,9 +339,17 @@
 )
 
 (defun assign-stat(state)
-   (match state 'ID)
-   (match state 'ASSIGN)
-   (expr state)
+	(if(eq(token state) 'ID)
+	   (progn 
+		   (if (not (symtab-member state (lexeme state)))
+		      (semerr2 state)
+         )
+		   (match state 'ID)
+      )
+	   (synerr1 state 'ID)
+   )
+	(match state 'ASSIGN)
+	(expr state)
 )
 
 (defun stat(state)
@@ -376,7 +392,8 @@
       ((eq(token state)    'BOOLEAN)
          (match state      'BOOLEAN))
       ((eq(token state)    'REAL)
-         (match state      'REAL))   
+         (match state      'REAL))
+      (t (synerr2 state))   
    )
 )
 
@@ -386,7 +403,12 @@
 )
 
 (defun id-list(state)
-   (symtab-add state (lexeme state))
+   (if(eq(token state) 'ID)
+      (if(not(symtab-member state (lexeme state)))
+         (symtab-add state (lexeme state))
+         (semerr1 state)
+      )
+   )
    (match state 'ID)
    (if(eq(token state) 'COMMA)
       (id-list-aux state)
@@ -400,10 +422,14 @@
    (match state 'SC)
 )
 
+(defun var-dec-list-aux(state)
+   (var-dec-list state)
+)
+
 (defun var-dec-list(state)
    (var-dec state)
    (if(eq(token state) 'ID)
-      (var-dec-list state)
+      (var-dec-list-aux state)
    )
 )
 
@@ -481,22 +507,21 @@
 ;;=====================================================================
 
 (defun parse-all ()
+  (let ((file-list (directory "testfiles/*"))) ; Hämta en lista över alla filer i mappen "testfiles/"
+    (mapcar #'parse file-list))) ; Tillämpa parse-funktionen på varje fil i listan
 
-;; *** TO BE DONE ***
-
-)
 
 ;;=====================================================================
 ; THE PARSER - test all files
 ;;=====================================================================
 
-;; (parse-all)
+(parse-all)
 
 ;;=====================================================================
 ; THE PARSER - test a single file
 ;;=====================================================================
 
-(parse "testfiles/testok1.pas")
+;; (parse "testfiles/testok1.pas")
 
 ;;=====================================================================
 ; THE PARSER - end of code
