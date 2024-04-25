@@ -505,9 +505,13 @@
 ;;=====================================================================
 
 (defun parse-all ()
-;;   (let ((file-list (directory "testfiles/test*"))) ; Hämta en lista över alla filer i mappen "testfiles/"
-;      (reverse file-list)
-;;      (mapcar #'parse file-list))
+
+
+   (let ((file-list (directory "testfiles/*"))) ; Hämta en lista över alla filer i mappen "testfiles/"
+   
+      (mapcar #'parse file-list))
+
+#|
    (mapcar #'parse '("testfiles/testa.pas"
                      "testfiles/testb.pas"
                      "testfiles/testc.pas"
@@ -553,7 +557,9 @@
                      "testfiles/sem2.pas"
                      "testfiles/sem3.pas"
                      "testfiles/sem4.pas"
-                     "testfiles/sem5.pas"))      
+                     "testfiles/sem5.pas"))   
+|#   
+
 ) 
 
 ;;=====================================================================
