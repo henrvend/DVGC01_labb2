@@ -505,13 +505,24 @@
 ;;=====================================================================
 
 (defun parse-all ()
-
-
-   (let ((file-list (directory "testfiles/*"))) ; Hämta en lista över alla filer i mappen "testfiles/"
-   
-      (mapcar #'parse file-list))
-
 #|
+   (setf test-path "testfiles")
+   
+   (mapcan #'parse
+      (mapcan #'(lambda (files)
+         (sort
+            (mapcar #'(lambda (s) (concatenate 'string test-path "/" s))
+               (mapcar #'file-namestring
+                  (directory (concatenate 'string test-path "/" files "?.pas"))
+               )
+            )
+         #'string<
+         ))
+         '("test" "testok" "fun" "sem")
+      )
+   )
+|#   
+
    (mapcar #'parse '("testfiles/testa.pas"
                      "testfiles/testb.pas"
                      "testfiles/testc.pas"
@@ -558,7 +569,7 @@
                      "testfiles/sem3.pas"
                      "testfiles/sem4.pas"
                      "testfiles/sem5.pas"))   
-|#   
+
 
 ) 
 
