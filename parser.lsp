@@ -289,7 +289,7 @@
 ;;=====================================================================
 
 ;; *** DONE? ***
-(defun semerr2-aux (state)
+(defun operand-aux (state)
    (semerr2 state)
    (match state 'ID)
 )
@@ -300,7 +300,7 @@
       ((and(eq(token state) 'ID) (symtab-member state (lexeme state)))  
          (match state 'ID))
       ((eq(token state) 'ID)
-         (semerr2-aux state)
+         (operand-aux state)
       )   
       ((eq(token state) 'NUM)
          (match state 'NUM)
