@@ -94,12 +94,12 @@
          ((string=   lexeme "program")  'PROGRAM   )
          ((string=   lexeme "var"    )  'VAR       )
 
-         ((string=   lexeme "("      )  'OP        )
+         ((string=   lexeme "("      )  'LP        )
          ((string=   lexeme "input"  )  'INPUT     )
          ((string=   lexeme ","      )  'COMMA     )
          ((string=   lexeme "output" )  'OUTPUT    )
-         ((string=   lexeme ")"      )  'CP        )
-         ((string=   lexeme ";"      )  'SC        )
+         ((string=   lexeme ")"      )  'RP        )
+         ((string=   lexeme ";"      )  'SCOLON    )
          ((string=   lexeme ":"      )  'COLON     )
          ((string=   lexeme "begin"  )  'BEGIN     )
          ((string=   lexeme "end"    )  'END       )
@@ -107,7 +107,7 @@
          ((string=   lexeme "boolean")  'BOOLEAN   )
          ((string=   lexeme "real"   )  'REAL      )
          ((string=   lexeme ":="     )  'ASSIGN    )
-         ((string=   lexeme "."      )  'DOT       )
+         ((string=   lexeme "."      )  'FSTOP     )
          ((string=   lexeme "+"      )  'ADD       )
          ((string=   lexeme "*"      )  'MULT      )
 
@@ -289,16 +289,18 @@
 ;;=====================================================================
 
 ;; *** DONE? ***
+(defun semerr2-aux (state)
+   (semerr2 state)
+   (match state 'ID)
+)
+
 
 (defun operand(state)
    (cond 
       ((and(eq(token state) 'ID) (symtab-member state (lexeme state)))  
          (match state 'ID))
       ((eq(token state) 'ID)
-         (progn
-            (semerr2 state)
-            (match state 'ID)
-         )
+         (semerr2-aux state)
       )   
       ((eq(token state) 'NUM)
          (match state 'NUM)
@@ -307,34 +309,40 @@
    )
 )
 
+(defun factor-aux (state)
+   (match state 'LP)
+   (expr state)
+   (match state 'RP)
+)
+
 (defun factor(state)
-   (if(eq(token state) 'OP)
-      (progn
-         (match state 'OP)
-         (expr state)
-         (match state 'CP)
-      )
+   (if(eq(token state) 'LP)
+      (factor-aux state)
       (operand state)
    )
+)
+
+(defun term-aux (state)
+   (match state 'MULT)
+   (term state)
 )
 
 (defun term(state)
    (factor state)
    (if(eq(token state) 'MULT)
-      (progn   
-         (match state 'MULT)
-         (term state)
-      )
+      (term-aux state)
    )
+)
+
+(defun expr-aux(state)
+   (match state 'ADD)
+   (expr state)
 )
 
 (defun expr(state)
    (term state)
    (if(eq(token state) 'ADD) 
-      (progn
-         (match state 'ADD)
-         (expr state)
-      )
+      (expr-aux state)
    )
 )
 
@@ -357,13 +365,13 @@
 )
 
 (defun stat-list-aux(state)
-   (match state 'SC)
+   (match state 'SCOLON)
    (stat-list state)
 )
 
 (defun stat-list(state)
    (stat state)
-   (if(eq(token state) 'SC)
+   (if(eq(token state) 'SCOLON)
       (stat-list-aux state)
    )
 )
@@ -373,7 +381,7 @@
    (stat-list state)
 
    (match state 'END)
-   (match state 'DOT)
+   (match state 'FSTOP)
 )
 
 ;;=====================================================================
@@ -420,7 +428,7 @@
    (id-list state)
    (match state 'COLON)
    (var-type state)
-   (match state 'SC)
+   (match state 'SCOLON)
 )
 
 (defun var-dec-list(state)
@@ -443,12 +451,12 @@
 (defun program-header(state)
    (match state 'PROGRAM   )
    (match state 'ID        )
-   (match state 'OP        )
+   (match state 'LP        )
    (match state 'INPUT     )
    (match state 'COMMA     )
    (match state 'OUTPUT    )
-   (match state 'CP        )
-   (match state 'SC        )
+   (match state 'RP        )
+   (match state 'SCOLON    )
 )
 
 
