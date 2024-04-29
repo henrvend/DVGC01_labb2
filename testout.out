@@ -6,7 +6,7 @@
         |            8     o   8           8     o     8  8
   ------+------       ooooo    8oooooo  ooo8ooo   ooooo   8
 
-Welcome to GNU CLISP 2.49.92 (2018-02-18) <http://clisp.org/>
+Welcome to GNU CLISP 2.49.93+ (2018-02-18) <http://clisp.org/>
 
 Copyright (c) Bruno Haible, Michael Stoll 1992-1993
 Copyright (c) Bruno Haible, Marcus Daniels 1994-1997
@@ -42,9 +42,13 @@ SEMERR2
 SEMERR3
 GET-TOKEN
 MATCH
+OPERAND-AUX
 OPERAND
+FACTOR-AUX
 FACTOR
+TERM-AUX
 TERM
+EXPR-AUX
 EXPR
 ASSIGN-STAT
 STAT
@@ -69,23 +73,23 @@ PARSE-ALL
 Symbol: "" 
 *** Syntax error:   Expected PROGRAM  found ""       
 *** Syntax error:   Expected ID       found ""       
-*** Syntax error:   Expected OP       found ""       
+*** Syntax error:   Expected LP       found ""       
 *** Syntax error:   Expected INPUT    found ""       
 *** Syntax error:   Expected COMMA    found ""       
 *** Syntax error:   Expected OUTPUT   found ""       
-*** Syntax error:   Expected CP       found ""       
-*** Syntax error:   Expected SC       found ""       
+*** Syntax error:   Expected RP       found ""       
+*** Syntax error:   Expected SCOLON   found ""       
 *** Syntax error:   Expected VAR      found ""       
 *** Syntax error:   Expected ID       found ""       
 *** Syntax error:   Expected COLON    found ""       
 *** Syntax error:   Expected TYPE     found "" 
-*** Syntax error:   Expected SC       found ""       
+*** Syntax error:   Expected SCOLON   found ""       
 *** Syntax error:   Expected BEGIN    found ""       
 *** Syntax error:   Expected ID       found ""       
 *** Syntax error:   Expected ASSIGN   found ""       
 *** Syntax error:   Expected OPERAND  found "" 
 *** Syntax error:   Expected END      found ""       
-*** Syntax error:   Expected DOT      found ""       
+*** Syntax error:   Expected FSTOP    found ""       
 ------------------------------------------------------
 Symbol Table is: NIL 
 ------------------------------------------------------
@@ -172,7 +176,7 @@ Parse Fail.
 Symbol: "program" 
 Symbol: "testd" 
 Symbol: "input" 
-*** Syntax error:   Expected OP       found "input"  
+*** Syntax error:   Expected LP       found "input"  
 Symbol: "," 
 Symbol: "output" 
 Symbol: ")" 
@@ -324,7 +328,7 @@ Symbol: "input"
 Symbol: "," 
 Symbol: "output" 
 Symbol: ";" 
-*** Syntax error:   Expected CP       found ";"      
+*** Syntax error:   Expected RP       found ";"      
 Symbol: "var" 
 Symbol: "A" 
 Symbol: "," 
@@ -362,7 +366,7 @@ Symbol: ","
 Symbol: "output" 
 Symbol: ")" 
 Symbol: "var" 
-*** Syntax error:   Expected SC       found "var"    
+*** Syntax error:   Expected SCOLON   found "var"    
 Symbol: "A" 
 Symbol: "," 
 Symbol: "B" 
@@ -479,7 +483,7 @@ Symbol: "A"
 Symbol: "B" 
 *** Syntax error:   Expected COLON    found "B"      
 *** Syntax error:   Expected TYPE     found "B" 
-*** Syntax error:   Expected SC       found "B"      
+*** Syntax error:   Expected SCOLON   found "B"      
 Symbol: "," 
 Symbol: "C" 
 Symbol: ":" 
@@ -596,7 +600,7 @@ Symbol: "C"
 Symbol: ":" 
 Symbol: "integer" 
 Symbol: "begin" 
-*** Syntax error:   Expected SC       found "begin"  
+*** Syntax error:   Expected SCOLON   found "begin"  
 Symbol: "A" 
 Symbol: ":=" 
 Symbol: "B" 
@@ -638,7 +642,7 @@ Symbol: "A"
 Symbol: ":=" 
 *** Syntax error:   Expected COLON    found ":="     
 *** Syntax error:   Expected TYPE     found ":=" 
-*** Syntax error:   Expected SC       found ":="     
+*** Syntax error:   Expected SCOLON   found ":="     
 *** Syntax error:   Expected BEGIN    found ":="     
 *** Syntax error:   Expected ID       found ":="     
 Symbol: "B" 
@@ -718,7 +722,7 @@ Symbol: "="
 *** Syntax error:   Expected ASSIGN   found "="      
 *** Syntax error:   Expected OPERAND  found "=" 
 *** Syntax error:   Expected END      found "="      
-*** Syntax error:   Expected DOT      found "="      
+*** Syntax error:   Expected FSTOP    found "="      
 *** Semantic error: found "="      expected EOF.
 Symbol: "B" 
 *** Semantic error: found "B"      expected EOF.
@@ -767,7 +771,7 @@ Symbol: ":"
 *** Syntax error:   Expected ASSIGN   found ":"      
 *** Syntax error:   Expected OPERAND  found ":" 
 *** Syntax error:   Expected END      found ":"      
-*** Syntax error:   Expected DOT      found ":"      
+*** Syntax error:   Expected FSTOP    found ":"      
 *** Semantic error: found ":"      expected EOF.
 Symbol: "B" 
 *** Semantic error: found "B"      expected EOF.
@@ -890,7 +894,7 @@ Symbol: ":="
 Symbol: "B" 
 Symbol: "C" 
 *** Syntax error:   Expected END      found "C"      
-*** Syntax error:   Expected DOT      found "C"      
+*** Syntax error:   Expected FSTOP    found "C"      
 *** Semantic error: found "C"      expected EOF.
 Symbol: "*" 
 *** Semantic error: found "*"      expected EOF.
@@ -935,7 +939,7 @@ Symbol: "+"
 Symbol: "C" 
 Symbol: "-" 
 *** Syntax error:   Expected END      found "-"      
-*** Syntax error:   Expected DOT      found "-"      
+*** Syntax error:   Expected FSTOP    found "-"      
 *** Semantic error: found "-"      expected EOF.
 Symbol: "2" 
 *** Semantic error: found "2"      expected EOF.
@@ -1058,7 +1062,7 @@ Symbol: "*"
 Symbol: "2" 
 Symbol: "end" 
 Symbol: "" 
-*** Syntax error:   Expected DOT      found ""       
+*** Syntax error:   Expected FSTOP    found ""       
 ------------------------------------------------------
 Symbol Table is: ("A" "B" "C") 
 ------------------------------------------------------
@@ -1471,7 +1475,7 @@ Symbol: "3"
 *** Syntax error:   Expected ASSIGN   found "3"      
 Symbol: "A" 
 *** Syntax error:   Expected END      found "A"      
-*** Syntax error:   Expected DOT      found "A"      
+*** Syntax error:   Expected FSTOP    found "A"      
 *** Semantic error: found "A"      expected EOF.
 Symbol: ":=" 
 *** Semantic error: found ":="     expected EOF.
@@ -1522,7 +1526,7 @@ Symbol: ":"
 *** Syntax error:   Expected ASSIGN   found ":"      
 *** Syntax error:   Expected OPERAND  found ":" 
 *** Syntax error:   Expected END      found ":"      
-*** Syntax error:   Expected DOT      found ":"      
+*** Syntax error:   Expected FSTOP    found ":"      
 *** Semantic error: found ":"      expected EOF.
 Symbol: "=" 
 *** Semantic error: found "="      expected EOF.
@@ -1734,7 +1738,7 @@ Symbol: "C"
 Symbol: ":" 
 Symbol: "double" 
 *** Syntax error:   Expected TYPE     found "double" 
-*** Syntax error:   Expected SC       found "double" 
+*** Syntax error:   Expected SCOLON   found "double" 
 Symbol: ";" 
 *** Syntax error:   Expected COLON    found ";"      
 *** Syntax error:   Expected TYPE     found ";" 
