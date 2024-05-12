@@ -1,0 +1,38 @@
+(defstruct node
+    elem
+    (left nil)
+    (right nil)
+)
+
+(defun bst-insert (bst key less-fn)
+  (if (null bst)
+      (make-node :elem key)
+      (if (funcall less-fn key (node-elem bst))
+          (if (null (node-left bst))              
+              (setf (node-left bst) (make-node :elem key))
+              (bst-insert (node-left bst) key less-fn))
+          (if (null (node-right bst))
+              (setf (node-right bst) (make-node :elem key))
+              (bst-insert (node-right bst) key less-fn)))))
+
+(defun in-order-traversal (bst)
+  (if (not (null bst))
+      (progn
+        (in-order-traversal (node-left bst))
+        (print (node-elem bst))
+        (in-order-traversal (node-right bst)))))
+
+
+
+;; "#'<" skickas med som less-fn för att kunna 
+;; bestämma större eller mindre, det måste finnas
+;; då "<"" operatorn inte kan bestämma mot "nil"
+
+(setf x (bst-insert nil 2 #'<))
+
+(bst-insert x 4 #'<)
+(bst-insert x 3 #'<)
+(bst-insert x 8 #'<)
+(bst-insert x 1 #'<)
+
+(in-order-traversal x)
